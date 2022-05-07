@@ -1,1 +1,341 @@
-{"openapi":"3.0.3","info":{"title":"Datalogger","version":"1.0","x-logo":{"url":""}},"servers":[{"url":"https://api.example.io"}],"paths":{"/sensor/temperature":{"summary":"Temperature data","get":{"tags":[],"summary":"Get the latest x temperature records"},"post":{"tags":[],"summary":"Add a new temperature data point"},"x-last-modified":1650627768113},"/sensor/humidity":{"summary":"Humidity data","get":{"tags":[]},"post":{"tags":[]},"x-last-modified":1650627930698},"/sensor/light":{"summary":"Light intensity data","get":{"tags":[]},"post":{"tags":[]},"x-last-modified":1650627957453},"/sensor/pressure":{"summary":"Atmospheric pressure data","get":{"tags":[]},"post":{"tags":[]},"x-last-modified":1650628003446},"/sensor":{"summary":"Sensor status","get":{"tags":[]},"post":{"tags":[]},"x-last-modified":1650628037495}},"components":{"securitySchemes":{},"schemas":{},"headers":{},"responses":{},"parameters":{}},"tags":[],"security":[]}
+{
+  "openapi": "3.0.3",
+  "info": {
+    "title": "Datalogger",
+    "version": "1.0",
+    "x-logo": {
+      "url": ""
+    }
+  },
+  "servers": [
+    {
+      "url": "https://api.example.io"
+    }
+  ],
+  "paths": {
+    "/sensor/temperature": {
+      "summary": "Temperature data",
+      "get": {
+        "tags": [],
+        "summary": "Get the latest x temperature records",
+        "parameters": [
+          {
+            "name": "from",
+            "in": "query",
+            "description": "From timestamp ISO 8601",
+            "required": false,
+            "deprecated": false,
+            "allowEmptyValue": false,
+            "style": "form",
+            "explode": true,
+            "schema": {
+              "type": "string"
+            },
+            "example": "?from=2022-05-07T15%3A55%3A48%2B00%3A00",
+            "x-last-modified": 1651934834625
+          },
+          {
+            "name": "to",
+            "in": "query",
+            "description": "To timestamp ISO 8601",
+            "required": false,
+            "deprecated": false,
+            "allowEmptyValue": false,
+            "style": "form",
+            "explode": true,
+            "schema": {
+              "type": "string",
+              "format": "datetime"
+            },
+            "example": "?to=2022-05-07T16%3A55%3A48%2B00%3A00",
+            "x-last-modified": 1651935025324
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "example": {
+                  "data": [
+                    {
+                      "value": 15,
+                      "created_at": "2022-05-07T15:55:27+00:00"
+                    },
+                    {
+                      "value": 18,
+                      "created_at": "2022-05-07T15:55:40+00:00"
+                    }
+                  ],
+                  "sensor": "temperature",
+                  "unit": "°C"
+                }
+              }
+            },
+            "x-last-modified": 1651932836024
+          }
+        }
+      },
+      "post": {
+        "tags": [],
+        "summary": "Add a new temperature data point",
+        "responses": {
+          "201": {
+            "description": "Added successfully",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                },
+                "example": "ok"
+              }
+            }
+          }
+        }
+      },
+      "x-last-modified": 1650627768113
+    },
+    "/sensor/humidity": {
+      "summary": "Humidity data",
+      "get": {
+        "tags": [],
+        "parameters": [
+          {
+            "name": "from",
+            "in": "query",
+            "description": "From timestamp ISO 8601",
+            "required": false,
+            "deprecated": false,
+            "allowEmptyValue": false,
+            "style": "form",
+            "explode": true,
+            "schema": {
+              "type": "string",
+              "format": "datetime"
+            },
+            "example": "from=2022-05-07T16%3A55%3A48%2B00%3A00",
+            "x-last-modified": 1651935350426
+          },
+          {
+            "name": "to",
+            "in": "query",
+            "description": "To timestamp ISO 8601",
+            "required": false,
+            "deprecated": false,
+            "allowEmptyValue": false,
+            "style": "form",
+            "explode": true,
+            "schema": {
+              "type": "string",
+              "format": "datetime"
+            },
+            "example": "to=2022-05-07T16%3A55%3A48%2B00%3A00",
+            "x-last-modified": 1651935395427
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "example": {
+                  "data": [
+                    {
+                      "value": 60,
+                      "created_at": "2022-05-07T15:55:40+00:00"
+                    }
+                  ],
+                  "sensor": "humidity",
+                  "unit": "%"
+                }
+              }
+            },
+            "x-last-modified": 1651933471642
+          }
+        }
+      },
+      "post": {
+        "tags": [],
+        "responses": {
+          "201": {
+            "description": "Added successfully",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                },
+                "example": "ok"
+              }
+            }
+          }
+        }
+      },
+      "x-last-modified": 1650627930698
+    },
+    "/sensor/light": {
+      "summary": "Light intensity data",
+      "get": {
+        "tags": [],
+        "parameters": [
+          {
+            "name": "from",
+            "in": "query",
+            "description": "From timestamp ISO 8601",
+            "required": false,
+            "deprecated": false,
+            "allowEmptyValue": false,
+            "style": "form",
+            "explode": true,
+            "schema": {
+              "type": "string",
+              "format": "datetime"
+            },
+            "example": "from=2022-05-07T16%3A55%3A48%2B00%3A00",
+            "x-last-modified": 1651935288465
+          },
+          {
+            "name": "to",
+            "in": "query",
+            "description": "To timestamp ISO 8601",
+            "required": false,
+            "deprecated": false,
+            "allowEmptyValue": false,
+            "style": "form",
+            "explode": true,
+            "schema": {
+              "type": "string",
+              "format": "datetime"
+            },
+            "example": "to=2022-05-07T16%3A55%3A48%2B00%3A00",
+            "x-last-modified": 1651935318454
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "example": {
+                  "data": [
+                    {
+                      "value": 20,
+                      "created_at": "2022-05-07T16:25:54+00:00"
+                    }
+                  ],
+                  "sensor": "light_intensity",
+                  "unit": "lux"
+                }
+              }
+            },
+            "x-last-modified": 1651933602612
+          }
+        }
+      },
+      "post": {
+        "tags": [],
+        "responses": {
+          "201": {
+            "description": "Added successfully",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                },
+                "example": "ok"
+              }
+            }
+          }
+        }
+      },
+      "x-last-modified": 1650627957453
+    },
+    "/sensor/pressure": {
+      "summary": "Atmospheric pressure data",
+      "get": {
+        "tags": [],
+        "parameters": [
+          {
+            "name": "from",
+            "in": "query",
+            "description": "From timestamp ISO 8601",
+            "required": false,
+            "deprecated": false,
+            "allowEmptyValue": false,
+            "style": "form",
+            "explode": true,
+            "schema": {
+              "type": "string",
+              "format": "datetime"
+            },
+            "example": "from=2022-05-07T16%3A55%3A48%2B00%3A00",
+            "x-last-modified": 1651935102187
+          },
+          {
+            "name": "to",
+            "in": "query",
+            "description": "To timestamp ISO 8601",
+            "required": false,
+            "deprecated": false,
+            "allowEmptyValue": false,
+            "style": "form",
+            "explode": true,
+            "schema": {
+              "type": "string",
+              "format": "datetime"
+            },
+            "example": "to=2022-05-07T16%3A55%3A48%2B00%3A00",
+            "x-last-modified": 1651935162490
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "example": {
+                  "data": [
+                    {
+                      "value": 78,
+                      "created_at": "2022-05-07T15:55:48+00:00"
+                    },
+                    {
+                      "value": 56,
+                      "created_at": "2022-05-07T16:25:44+00:00"
+                    }
+                  ],
+                  "sensor": "atmospheric_pressure",
+                  "unit": "Pa"
+                }
+              }
+            },
+            "x-last-modified": 1651933644706
+          }
+        }
+      },
+      "post": {
+        "tags": [],
+        "responses": {
+          "201": {
+            "description": "Added successfully",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                },
+                "example": "ok"
+              }
+            }
+          }
+        }
+      },
+      "x-last-modified": 1650628003446
+    }
+  },
+  "components": {
+    "schemas": {},
+    "responses": {},
+    "parameters": {},
+    "headers": {},
+    "securitySchemes": {}
+  }
+}
