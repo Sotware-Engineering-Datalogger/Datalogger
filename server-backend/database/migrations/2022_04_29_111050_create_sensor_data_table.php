@@ -16,7 +16,7 @@ return new class extends Migration
     {
         Schema::create('sensors', function (Blueprint $table) {
             $table->id();
-            $table->string('name');
+            $table->string('name')->unique();
             $table->string('measurement_unit');
         });
 
@@ -32,7 +32,7 @@ return new class extends Migration
             $table->unsignedBigInteger('sensor_id');
             $table->float('value');
             $table->timestamps();
-            
+
             $table->foreign('sensor_id')->references('id')->on('sensors');
         });
     }
