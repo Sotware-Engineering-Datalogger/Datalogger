@@ -24,8 +24,8 @@ Route::controller(\App\Http\Controllers\SensorDataController::class)->group(func
     Route::get('/sensor/light', 'indexLight');
     Route::get('/sensor/pressure', 'indexPressure');
 
-    Route::post('/sensor/temperature', 'indexTemperature');
-    Route::post('/sensor/humidity', 'indexHumidity');
-    Route::post('/sensor/light', 'indexLight');
-    Route::post('/sensor/pressure', 'indexPressure');
+    Route::post('/sensor/temperature', 'storeTemperature');
+    Route::post('/sensor/humidity', 'storeHumidity');
+    Route::post('/sensor/light', 'storeLight');
+    Route::post('/sensor/pressure', 'storePressure');
 });

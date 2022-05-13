@@ -7,6 +7,7 @@ use App\Models\SensorData;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Validator;
 
 class SensorDataController extends Controller
 {
@@ -85,4 +86,99 @@ class SensorDataController extends Controller
         return response()->json($this->getSensorData('light_intensity', $request), 200);
     }
 
+    /**
+     * Store a new temperature measurement.
+     *
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function storeTemperature(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'value' => 'required|numeric',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json(['created' => false], 422);
+        }
+
+        $sensor = Sensor::where('name', 'temperature')->first();
+        $sensor->measurements()->create([
+            'value' => $request->value,
+        ]);
+
+        return response()->json(['created' => true], 201);
+    }
+
+    /**
+     * Store a new humidity measurement.
+     *
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function storeHumidity(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'value' => 'required|numeric|min:0|max:100',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json(['created' => false], 422);
+        }
+
+        $sensor = Sensor::where('name', 'humidity')->first();
+        $sensor->measurements()->create([
+            'value' => $request->value,
+        ]);
+
+        return response()->json(['created' => true], 201);
+    }
+
+    /**
+     * Store a new atmospheric pressure measurement.
+     *
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function storePressure(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'value' => 'required|numeric|min:0',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json(['created' => false], 422);
+        }
+
+        $sensor = Sensor::where('name', 'atmospheric_pressure')->first();
+        $sensor->measurements()->create([
+            'value' => $request->value,
+        ]);
+
+        return response()->json(['created' => true], 201);
+    }
+
+    /**
+     * Store a new light intensity measurement.
+     *
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function storeLight(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'value' => 'required|numeric|min:0',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json(['created' => false], 422);
+        }
+
+        $sensor = Sensor::where('name', 'light_intensity')->first();
+        $sensor->measurements()->create([
+            'value' => $request->value,
+        ]);
+
+        return response()->json(['created' => true], 201);
+    }
 }
