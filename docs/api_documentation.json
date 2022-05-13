@@ -79,15 +79,35 @@
       "post": {
         "tags": [],
         "summary": "Add a new temperature data point",
+        "requestBody": {
+          "description": "Temperature value in °C",
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "number"
+              }
+            }
+          },
+          "required": true
+        },
         "responses": {
           "201": {
             "description": "Added successfully",
             "content": {
-              "text/plain": {
-                "schema": {
-                  "type": "string"
-                },
-                "example": "ok"
+              "application/json": {
+                "example": {
+                  "created": true
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Invalid value",
+            "content": {
+              "application/json": {
+                "example": {
+                  "created": false
+                }
               }
             }
           }
@@ -156,15 +176,35 @@
       },
       "post": {
         "tags": [],
+        "requestBody": {
+          "description": "Humidity value in % (0-100)",
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "number"
+              }
+            }
+          },
+          "required": true
+        },
         "responses": {
           "201": {
             "description": "Added successfully",
             "content": {
-              "text/plain": {
-                "schema": {
-                  "type": "string"
-                },
-                "example": "ok"
+              "application/json": {
+                "example": {
+                  "created": true
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Invalid value",
+            "content": {
+              "application/json": {
+                "example": {
+                  "created": false
+                }
               }
             }
           }
@@ -233,15 +273,35 @@
       },
       "post": {
         "tags": [],
+        "requestBody": {
+          "description": "Light intensity value in lux",
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "number"
+              }
+            }
+          },
+          "required": true
+        },
         "responses": {
           "201": {
             "description": "Added successfully",
             "content": {
-              "text/plain": {
-                "schema": {
-                  "type": "string"
-                },
-                "example": "ok"
+              "application/json": {
+                "example": {
+                  "created": true
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Invalid value",
+            "content": {
+              "application/json": {
+                "example": {
+                  "created": false
+                }
               }
             }
           }
@@ -314,15 +374,35 @@
       },
       "post": {
         "tags": [],
+        "requestBody": {
+          "description": "atmospheric pressure in Pa",
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "number"
+              }
+            }
+          },
+          "required": true
+        },
         "responses": {
           "201": {
             "description": "Added successfully",
             "content": {
-              "text/plain": {
-                "schema": {
-                  "type": "string"
-                },
-                "example": "ok"
+              "application/json": {
+                "example": {
+                  "created": true
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Invalid value",
+            "content": {
+              "application/json": {
+                "example": {
+                  "created": false
+                }
               }
             }
           }
