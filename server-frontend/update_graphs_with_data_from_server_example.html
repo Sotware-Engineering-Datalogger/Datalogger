@@ -1,0 +1,128 @@
+<html lang="eng">
+<head>
+    <title>Datalogger dashboard</title>
+</head>
+
+<body onload="onload()">
+    <!--    Charts-->
+    <canvas id="tempChart" width="400" height="100"></canvas>
+    <canvas id="humChart" width="400" height="100"></canvas>
+
+    <!--    Date picker form   -->
+    <label for="from">From:</label>
+    <input type="date" id="from">
+    <label for="to">To:</label>
+    <input type="date" id="to">
+    <button onclick="update_graph_form()">Update</button>
+
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        const temp_c = document.getElementById('tempChart');
+        const tempChart = new Chart(temp_c, {
+            type: 'line',
+            data: {
+                datasets: [{
+                    label: 'Temperature',
+                    data: [],
+                    fill: false,
+                    borderColor: 'rgb(75, 192, 192)',
+                    tension: 0.1
+                }],
+            },
+        });
+
+        const hum_c = document.getElementById('humChart');
+        const humChart = new Chart(hum_c, {
+            type: 'line',
+            data: {
+                datasets: [{
+                    label: 'Humidity',
+                    data: [],
+                    fill: false,
+                    borderColor: 'rgb(75, 192, 192)',
+                    tension: 0.1
+                }],
+            },
+        });
+
+
+    </script>
+
+    <script>
+        /**
+         * Runs on body load
+         */
+        function onload() {
+            update_all_charts()
+        }
+
+        /**
+         * Update all the charts with data from the server
+         *
+         * @param from_d optional from ISO date string
+         * @param to_d optional to ISO date string
+         */
+        function update_all_charts(from_d = 0, to_d = 0) {
+            get_chart_data(tempChart, "sensor/temperature", from_d, to_d);
+            get_chart_data(humChart, "sensor/humidity", from_d, to_d);
+            //get_chart_data(lightChart, "sensor/light");
+        }
+
+        /**
+         * Update the graphs to the selected date range
+         */
+        function update_graph_form() {
+            var from_date = new Date(document.getElementById("from").value);
+            var to_date = new Date(document.getElementById("to").value);
+            if (!isNaN(from_date) && !isNaN(to_date)) {
+                from_date = from_date.toISOString();
+                to_date = to_date.toISOString();
+                update_all_charts(from_date, to_date);
+            }
+        }
+
+        /**
+         * Get data from the server and update the chart with it
+         *
+         * @param chart Chartjs object
+         * @param path API path without leading /
+         * @param from_d optional from ISO date string
+         * @param to_d optional to ISO date string
+         */
+        function get_chart_data(chart, path, from_d = 0, to_d = 0) {
+            const base_url = "http://127.0.0.1:8000/";	// TODO: change to api url 
+
+            var url = base_url + path;
+            if (from_d !== 0 && to_d !== 0) {
+                url += "?from=" + from_d + "&" + "to=" + to_d;
+            }
+
+            var xhr = new XMLHttpRequest();
+            xhr.open("GET", url, true);
+            xhr.onreadystatechange = function () {
+                if (xhr.readyState === 4 && xhr.status === 200) {
+                    update_chart(chart, JSON.parse(xhr.responseText).data);
+                }
+            }
+            xhr.send();
+        }
+
+        /**
+         * Update the chart with the request data
+         *
+         * @param chart
+         * @param req_data
+         */
+        function update_chart(chart, req_data) {
+            chart.data.datasets[0].data = [];
+            for (var i = 0; i < req_data.length; i++) {
+                chart.data.datasets[0].data[i] = {x: 0, y: 0};
+                chart.data.datasets[0].data[i].x = req_data[i].created_at,
+                    chart.data.datasets[0].data[i].y = req_data[i].value
+            }
+            chart.update();
+        }
+    </script>
+</body>
+</html>
