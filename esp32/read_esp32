@@ -1,0 +1,25 @@
+#include "DHT.h"
+
+float               g_Humidity = 0.0;
+float               g_Temperature = 0.0;
+unsigned long       g_Time = 0;
+
+void setup() {
+  // put your setup code here, to run once:
+  Serial.begin(115200);
+
+}
+
+void loop() {
+  // put your main code here, to run repeatedly:
+        g_Temperature = g_dht.readTemperature();
+        Serial.print("Temperature: ");
+        Serial.print(g_Temperature);
+        Serial.println(" °C");
+        
+        g_Humidity = g_dht.readHumidity();
+        Serial.print("Humidity: ");
+        Serial.print(g_Humidity);
+        Serial.println(" %");
+        Serial.println(" ");
+}
