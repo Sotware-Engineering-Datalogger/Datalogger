@@ -5,9 +5,185 @@
 	<link href="reset.css" rel="stylesheet" />
 	<link href="style.css" rel="stylesheet" />
 	<script src="/jquery-3.6.0.js"></script>
+	<script src="chart.js"></script>
 </head>
 
-<body>
-	<p>Initial frontend application</p>
+<body onload="onload()">
+	<header>
+		<div class="hoofding">
+			<p>Datalogger</p>
+		</div>
+	</header>
+
+	<contents>
+		<div class="datepicker">
+			<label for="from">From:</label>
+			<input type="date" id="from">
+			<label for="to">To:</label>
+			<input type="date" id="to">
+			<button onclick="update_graph_form()">Update</button>
+		</div>
+
+		
+		<div class="chart-container" class="topchart">
+			<canvas id="tempChart"></canvas>
+		</div>
+		<div class="chart-container">
+			<canvas id="humChart"></canvas>
+		</div>
+		<div class="chart-container">
+			<canvas id="lightChart"></canvas>
+		</div>
+		<script src="chart.js"></script>
+		<script>
+			const dataTemp = {
+			  datasets: [{
+				label: 'Temperature',
+				backgroundColor: 'rgb(255, 0, 0)',
+				borderColor: 'rgb(255, 0, 0)',
+				data: [],
+			  }]
+			};
+		  
+			const configTemp = {
+			  type: 'line',
+			  data: dataTemp,
+			  options: {
+				responsive:true,
+				maintainAspectRatio: false,
+			  }
+			};
+	
+			const dataHum = {
+			  datasets: [{
+				label: 'Humidity',
+				backgroundColor: 'rgb(0, 0, 255)',
+				borderColor: 'rgb(0, 0, 255)',
+				data: [],
+			  }]
+			};
+		  
+			const configHum = {
+			  type: 'line',
+			  data: dataHum,
+			  options: {
+				responsive:true,
+				maintainAspectRatio: false,
+			  }
+			};
+	
+			const dataLight = {
+			  datasets: [{
+				label: 'Light',
+				backgroundColor: 'rgb(255, 200, 0)',
+				borderColor: 'rgb(255, 200, 0)',
+				data: [],
+			  }]
+			};
+		  
+			const configLight = {
+			  type: 'line',
+			  data: dataLight,
+			  options: {
+				responsive:true,
+				maintainAspectRatio: false,
+			  }
+			};
+		  </script>
+	  <script>
+		const tempchart = new Chart(
+		  document.getElementById('tempChart'),
+		  configTemp
+		);
+	
+		const humchart = new Chart(
+		  document.getElementById('humChart'),
+		  configHum
+		);
+	
+		const lightchart = new Chart(
+		  document.getElementById('lightChart'),
+		  configLight
+		);
+	
+	  </script>   
+	</contents>
+
+    <footer>"Copyright © Thomas More Mechelen-Antwerpen vzw - Campus De Nayer - Professionele bachelor elektronica-ict - 2021" </footer>
+	<script>
+        /**
+         * Runs on body load
+         */
+        function onload() {
+            update_all_charts()
+        }
+
+        /**
+         * Update all the charts with data from the server
+         *
+         * @param from_d optional from ISO date string
+         * @param to_d optional to ISO date string
+         */
+        function update_all_charts(from_d = 0, to_d = 0) {
+            get_chart_data(tempChart, "sensor/temperature", from_d, to_d);
+            get_chart_data(humChart, "sensor/humidity", from_d, to_d);
+            get_chart_data(lightChart, "sensor/light", from_d, to_d);
+        }
+
+        /**
+         * Update the graphs to the selected date range
+         */
+        function update_graph_form() {
+            var from_date = new Date(document.getElementById("from").value);
+            var to_date = new Date(document.getElementById("to").value);
+            if (!isNaN(from_date) && !isNaN(to_date)) {
+                from_date = from_date.toISOString();
+                to_date = to_date.toISOString();
+                update_all_charts(from_date, to_date);
+            }
+        }
+
+        /**
+         * Get data from the server and update the chart with it
+         *
+         * @param chart Chartjs object
+         * @param path API path without leading /
+         * @param from_d optional from ISO date string
+         * @param to_d optional to ISO date string
+         */
+        function get_chart_data(chart, path, from_d = 0, to_d = 0) {
+            const base_url = "http://datalogger.listy.be" 
+
+            var url = base_url + path;
+            if (from_d !== 0 && to_d !== 0) {
+                url += "?from=" + from_d + "&" + "to=" + to_d;
+            }
+
+            var xhr = new XMLHttpRequest();
+            xhr.open("GET", url, true);
+            xhr.onreadystatechange = function () {
+                if (xhr.readyState === 4 && xhr.status === 200) {
+                    update_chart(chart, JSON.parse(xhr.responseText).data);
+                }
+            }
+            xhr.send();
+        }
+
+        /**
+         * Update the chart with the request data
+         *
+         * @param chart
+         * @param req_data
+         */
+        function update_chart(chart, req_data) {
+            chart.data.datasets[0].data = [];
+            for (var i = 0; i < req_data.length; i++) {
+                chart.data.datasets[0].data[i] = {x: 0, y: 0};
+                chart.data.datasets[0].data[i].x = req_data[i].created_at,
+                    chart.data.datasets[0].data[i].y = req_data[i].value
+            }
+            chart.update();
+        }
+    </script>
 </body>
 </html>

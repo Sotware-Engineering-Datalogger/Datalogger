@@ -1,3 +1,51 @@
 body {
+    background-color: rgb(244, 239, 239);
+}
+
+header {
+    background-color: rgb(7, 7, 71);
+    display: block;
+    position: absolute;
+    width: 100%;
+    height: 60px;
+
+}
+
+.hoofding {
+    text-align: center;
+    position: absolute;
+    width: 100%;
+    font-weight: bold;
+    font-size: 24px;
+    color: lightgray;
+    top: 20px;
+}
+
+footer {
+    height:20px;
+    background: rgb(29, 29, 98);
+    padding-top: 5px;
+    text-align: center;
+    color: white;
+    position: absolute;
+    bottom:0;
+    width:100%;
+ }
+
+.chart-container {
+    position: relative;
+    height: 200px;
+    width: 1000px;
+    float: right;
+    padding-right: 100px;
+    margin-top: 60px;
+    margin-bottom: -20px;
+}
+
+.datepicker {
+    display: block;
+    position: absolute;
+    margin-top: 75px;
     background-color: gray;
+    padding: 5px;
 }
