@@ -36,7 +36,7 @@ class SensorDataController extends Controller
                     'value' => $item->value,
                     'created_at' => $item->created_at->toIso8601String(),
                 ];
-            }),
+            })->values(),
             'sensor' => $sensor->name,
             'unit' => $sensor->measurement_unit,
         ]);
