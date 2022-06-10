@@ -28,7 +28,7 @@
         <canvas id="tempChart"></canvas>
     </div>
     <div class="chart-container">
-        <canvas id="humChart"></canvas>
+        <canvas id="pressureChart"></canvas>
     </div>
     <div class="chart-container">
         <canvas id="lightChart"></canvas>
@@ -53,18 +53,18 @@
             }
         };
 
-        const dataHum = {
+        const dataPressure = {
             datasets: [{
-                label: 'Humidity',
+                label: 'Atmospheric pressure',
                 backgroundColor: 'rgb(0, 0, 255)',
                 borderColor: 'rgb(0, 0, 255)',
                 data: [],
             }]
         };
 
-        const configHum = {
+        const configPressure = {
             type: 'line',
-            data: dataHum,
+            data: dataPressure,
             options: {
                 responsive: true,
                 maintainAspectRatio: false,
@@ -95,9 +95,9 @@
             configTemp
         );
 
-        const humChart = new Chart(
-            document.getElementById('humChart'),
-            configHum
+        const pressureChart = new Chart(
+            document.getElementById('pressureChart'),
+            configPressure
         );
 
         const lightChart = new Chart(
@@ -126,7 +126,7 @@
          */
         function updateAllCharts(fromDate = 0, toDate = 0) {
             getChartData(tempChart, "sensor/temperature", fromDate, toDate);
-            getChartData(humChart, "sensor/humidity", fromDate, toDate);
+            getChartData(pressureChart, "sensor/pressure", fromDate, toDate);
             getChartData(lightChart, "sensor/light", fromDate, toDate);
         }
 
