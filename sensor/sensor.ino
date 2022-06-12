@@ -11,6 +11,12 @@ const char* ssid = "datalogger";
 const char* password = "datalogger";
 const char* server_name = "http://192.168.2.1/sensor";
 
+int32_t pressure;
+int32_t temp;
+int32_t light;
+
+TaskHandle_t task1;
+
 LOLIN_HP303B HP303BPressureSensor;
 
 /**
@@ -21,7 +27,9 @@ LOLIN_HP303B HP303BPressureSensor;
  * @return true   Request succesfull
  * @return false  Request failed
  */
-bool storeData(int32_t val, String path) {
+bool storeData(int32_t val, String path)
+{
+  yield();
   if (WiFi.status()== WL_CONNECTED) {
       WiFiClient client;
       HTTPClient http;
@@ -31,13 +39,30 @@ bool storeData(int32_t val, String path) {
       int http_response_code = http.POST("{\"value\":\"" + String(val) + "\"}");
       http.end();
 
-      if (http_response_code == 201)
+      if (http_response_code == 201) {
+        #ifdef DEBUG
+        Serial.println("Data send: " + path);
+        #endif
         return true;
-      else
-        return false;      
+      }
+      else {
+        #ifdef DEBUG
+        Serial.println("Data send failed: " + path);
+        #endif
+      }      
   }
   return false;
+}
 
+void storeAllDataTask(void *par)
+{
+  // Send the data to the server
+  storeData(pressure, "/pressure");
+  storeData(temp, "/temperature");
+  storeData(light, "/light");
+  
+  // Stop this task
+  vTaskDelete(task1);
 }
 
 void setup()
@@ -58,9 +83,6 @@ void setup()
 
 void loop()
 {
-  int32_t pressure;
-  int32_t temp;
-  int32_t light;
   double adc_v;
 
   // Read the pressure
@@ -91,11 +113,20 @@ void loop()
   Serial.println("lux");
   #endif
 
-  // Send the data to the server
-  storeData(pressure, "/pressure");
-  storeData(temp, "/temperature");
-  storeData(light, "/light");
+  yield();
+  xTaskCreatePinnedToCore(
+    storeAllDataTask, // Function
+    "StoreAllData",   // Task name
+    8000,             // Stack size (8k bytes)
+    NULL,             // Parameter to pass
+    1,                // Task priority
+    &task1,           // Task handle
+    0                 // Run on core 0
+  );
 
   // Wait for the set interval time
-  delay(UPDATE_INTERVAL);
+  unsigned long start_t = millis();
+  while (millis() - start_t < UPDATE_INTERVAL) {
+    yield();
+  }
 }
